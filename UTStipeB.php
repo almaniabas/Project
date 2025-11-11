@@ -60,6 +60,29 @@
         h4 {
             margin-top: 20px;
         }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        table,
+        th,
+        td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #c24f71ff;
+            color: white;
+        }
+
+        .hasil {
+            margin-top: 20px;
+        }
     </style>
 </head>
 
@@ -115,16 +138,16 @@
                 ?>
             </select>
 
-            <label for="kehadiran">Nilai Kehadiran</label>
+            <label for="kehadiran">Nilai Kehadiran (0-100):</label>
             <input type="number" name="kehadiran" id="kehadiran" required>
 
-            <label for="tugas">Nilai Tugas</label>
+            <label for="tugas">Nilai Tugas (0-100):</label>
             <input type="number" name="tugas" id="tugas" required>
 
-            <label for="uts">Nilai UTS</label>
+            <label for="uts">Nilai UTS (0-100):</label>
             <input type="number" name="uts" id="uts" required>
 
-            <label for="uas">Nilai UAS</label>
+            <label for="uas">Nilai UAS (0-100):</label>
             <input type="number" name="uas" id="uas" required>
 
             <input type="submit" name="hitung" value="Hitung Nilai Akhir">
@@ -133,24 +156,59 @@
         <?php
         if (isset($_POST['hitung'])) {
             $namaMahasiswa = $_POST['mahasiswa'];
-            $kehadiran = $_POST['kehadiran'];
-            $tugas = $_POST['tugas'];
-            $uts = $_POST['uts'];
-            $uas = $_POST['uas'];
+            $kehadiran = $_POST['kehadiran'] ?? 0;
+            $tugas = $_POST['tugas'] ?? 0;
+            $uts = $_POST['uts'] ?? 0;
+            $uas = $_POST['uas'] ?? 0;
 
             $nilaiAkhir = hitungNilaiAkhir($kehadiran, $tugas, $uts, $uas, $persentase);
             $gradeNilai = grade($nilaiAkhir);
 
-            echo "<h3>Hasil Nilai Akhir</h3>";
-            echo "<table border='0' cellpadding='5'>";
-            echo "<tr><td>Nama Mahasiswa</td><td>: <b>$namaMahasiswa</b></td></tr>";
-            echo "<tr><td>Kehadiran</td><td>: $kehadiran x " . ($persentase['kehadiran'] * 100) . "% = " . number_format($kehadiran * $persentase['kehadiran'], 2) . "</td></tr>";
-            echo "<tr><td>Tugas</td><td>: $tugas x " . ($persentase['tugas'] * 100) . "% = " . number_format($tugas * $persentase['tugas'], 2) . "</td></tr>";
-            echo "<tr><td>UTS</td><td>: $uts x " . ($persentase['uts'] * 100) . "% = " . number_format($uts * $persentase['uts'], 2) . "</td></tr>";
-            echo "<tr><td>UAS</td><td>: $uas x " . ($persentase['uas'] * 100) . "% = " . number_format($uas * $persentase['uas'], 2) . "</td></tr>";
-            echo "<tr><td><b>Nilai Akhir</b></td><td>: <b>" . number_format($nilaiAkhir, 2) . "</b></td></tr>";
-            echo "<tr><td><b>Nilai Huruf</b></td><td>: <b>$gradeNilai</b></td></tr>";
-            echo "</table>";
+            echo "
+            <div class='hasil'>
+                <h3>Hasil Nilai Akhir</h3>
+                <h4>Nama Mahasiswa: $namaMahasiswa</h4>
+                <table>
+                    <tr>
+                        <th>Komponen</th>
+                        <th>Bobot</th>
+                        <th>Nilai</th>
+                        <th>Kontribusi</th>
+                    </tr>
+                    <tr>
+                        <td>Kehadiran</td>
+                        <td>" . ($persentase['kehadiran'] * 100) . "%</td>
+                        <td>$kehadiran</td>
+                        <td>" . number_format(($kehadiran * $persentase['kehadiran']), 2) . "</td>
+                    </tr>
+                    <tr>
+                        <td>Tugas</td>
+                        <td>" . ($persentase['tugas'] * 100) . "%</td>
+                        <td>$tugas</td>
+                        <td>" . number_format($tugas * $persentase['tugas'], 2) . "</td>
+                    </tr>
+                    <tr>
+                        <td>UTS</td>
+                        <td>" . ($persentase['uts'] * 100) . "%</td>
+                        <td>$uts</td>
+                        <td>" . number_format($uts * $persentase['uts'], 2) . "</td>
+                    </tr>
+                    <tr>
+                        <td>UAS</td>
+                        <td>" . ($persentase['uas'] * 100) . "%</td>
+                        <td>$uas</td>
+                        <td>" . number_format($uas * $persentase['uas'], 2) . "</td>
+                    </tr>
+                    <tr>
+                        <th colspan='3'>Nilai Akhir</th>
+                        <th>" . number_format($nilaiAkhir, 2) . "</th>
+                    </tr>
+                    <tr>
+                        <th colspan='3'>Nilai Huruf</th>
+                        <th>$gradeNilai</th>
+                    </tr>
+                </table>
+            </div>";
         }
         ?>
     </div>
