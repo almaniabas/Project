@@ -89,6 +89,10 @@
 <body>
     <div class="container">
         <h2>PERHITUNGAN NILAI AKHIR KULIAH</h2>
+        <hr>
+        <p style="font-size: 13px; color: black; text-align: center;">NAMA: Al AMANI ABAS</p>
+        <p style="font-size: 13px; color: black; text-align: center;">NIM: 202404020</p>
+        <hr>
 
         <?php
         $persentase = array(
